@@ -98,74 +98,7 @@ public AI clone() {
     }
     
     public void workersBehavior(List<Unit> workers, Player p, GameState gs) {
-    	int nbases = 0;
-        int nbarracks = 0;
-
-        int resourcesUsed = 0;
-        List<Unit> freeWorkers = new LinkedList<Unit>();
-        freeWorkers.addAll(workers);
-
-        if (workers.isEmpty()) {
-            return;}
-
-        for (Unit u2 : pgs.getUnits()) {
-            if (u2.getType() == baseType
-                    && u2.getPlayer() == p.getID()) {
-                nbases++;}
-            if (u2.getType() == barracksType
-                    && u2.getPlayer() == p.getID()) {
-                nbarracks++;}
-        }
-
-        List<Integer> reservedPositions = new LinkedList<Integer>();
-        if (nbases == 0 && !freeWorkers.isEmpty()) {
-            // build a base:
-            if (p.getResources() >= baseType.cost + resourcesUsed) {
-                Unit u = freeWorkers.remove(0);
-                buildIfNotAlreadyBuilding(u,baseType,u.getX(),u.getY(),reservedPositions,p,pgs);
-                resourcesUsed += baseType.cost;}
-        }
-
-        if (nbarracks == 0 && !freeWorkers.isEmpty()) {
-            // build a barracks:
-            if (p.getResources() >= barracksType.cost + resourcesUsed) {
-                Unit u = freeWorkers.remove(0);
-                buildIfNotAlreadyBuilding(u,barracksType,u.getX(),u.getY(),reservedPositions,p,pgs);
-                resourcesUsed += barracksType.cost;}
-        }
-
-
-        // harvest with all the free workers:
-        for (Unit u : freeWorkers) {
-            Unit closestBase = null;
-            Unit closestResource = null;
-            int closestDistance = 0;
-            for (Unit u2 : pgs.getUnits()) {
-                if (u2.getType().isResource) {
-                    int d = Math.abs(u2.getX() - u.getX()) + Math.abs(u2.getY() - u.getY());
-                    if (closestResource == null || d < closestDistance) {
-                        closestResource = u2;
-                        closestDistance = d;}
-                }
-            }
-            closestDistance = 0;
-            for (Unit u2 : pgs.getUnits()) {
-                if (u2.getType().isStockpile && u2.getPlayer()==p.getID()) {
-                    int d = Math.abs(u2.getX() - u.getX()) + Math.abs(u2.getY() - u.getY());
-                    if (closestBase == null || d < closestDistance) {
-                        closestBase = u2;
-                        closestDistance = d;}
-                }
-            }
-            if (closestResource != null && closestBase != null) {
-                AbstractAction aa = getAbstractAction(u);
-                if (aa instanceof Harvest) {
-                    Harvest h_aa = (Harvest)aa;
-                    if (h_aa.target != closestResource || h_aa.base!=closestBase) harvest(u, closestResource, closestBase);} 
-                else {
-                    harvest(u, closestResource, closestBase);}
-            }
-        }
+    	
 	}
 
 
